@@ -19,12 +19,13 @@ impl Data {
     }
 
     // Method to calculate AUC using the Trapezoidal rule
-    pub fn calculate_auc(&self) -> f64 {
+    pub fn calculate_auc(&self) -> Result<f64, String> {
         let mut auc = 0.0;
 
-        // Ensure that time and obs vectors are of the same length and not empty
-        if self.time.len() != self.obs.len() || self.time.is_empty() {
-            return 0.0; // Return 0 or handle as appropriate
+        if self.time.len() != self.obs.len() {
+            return Err("Time and observation vectors have different lengths.".to_string());
+        } else if self.time.is_empty() {
+            return Err("Time vector is empty.".to_string());
         }
 
         // Apply the Trapezoidal rule for AUC calculation
@@ -34,6 +35,6 @@ impl Data {
             auc += dt * avg_obs;
         }
 
-        auc
+        Ok(auc)
     }
 }
